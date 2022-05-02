@@ -1,0 +1,29 @@
+[
+    {
+        "model": "raterprojectapi.photo",
+        "pk": 1,
+        "fields": {
+            "img_file": "https://www.belloflostsouls.net/wp-content/uploads/2022/03/MTGCards.jpg",
+            "game": 3,
+            "gamer": 1
+        }
+    },
+    {
+        "model": "raterprojectapi.photo",
+        "pk": 2,
+        "fields": {
+            "img_file": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Monopoly_board_on_white_bg.jpg/640px-Monopoly_board_on_white_bg.jpg",
+            "game": 2,
+            "gamer": 1
+        }
+    },
+    {
+        "model": "raterprojectapi.photo",
+        "pk": 3,
+        "fields": {
+            "img_file": "https://miro.medium.com/max/1400/1*r_rq_fRLNliX91GSgMi38Q.jpeg",
+            "game": 1,
+            "gamer": 1
+        }
+    }
+]

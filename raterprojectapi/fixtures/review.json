@@ -1,0 +1,29 @@
+[
+    {
+        "model": "raterprojectapi.review",
+        "pk": 1,
+        "fields": {
+            "content": "The competitive scene is well established and the game engages you strategically in a way that most other games fail to do",
+            "game": 3,
+            "gamer": 1
+        }
+    },
+    {
+        "model": "raterprojectapi.review",
+        "pk": 2,
+        "fields": {
+            "content": "Hopefully your dice are rolling hot that day",
+            "game": 2,
+            "gamer": 1
+        }
+    },
+    {
+        "model": "raterprojectapi.review",
+        "pk": 3,
+        "fields": {
+            "content": "Monopolize the wood, cut em off at the roads",
+            "game": 1,
+            "gamer": 1
+        }
+    }
+]

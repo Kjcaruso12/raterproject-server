@@ -1,0 +1,44 @@
+[
+    {
+        "model": "raterprojectapi.game",
+        "pk": 1,
+        "fields": {
+            "title": "Settlers of Catan",
+            "description": "Quickest way to ruin friendships",
+            "designer": "Catan Inc",
+            "year_released": 1995,
+            "number_of_players": 4,
+            "estimated_time_to_play": 60,
+            "age_recommendation": 13,
+            "gamer": 1
+        }
+    },
+    {
+        "model": "raterprojectapi.game",
+        "pk": 2,
+        "fields": {
+            "title": "Monopoly",
+            "description": "Because who doesn't love taking their friends' money?",
+            "designer": "Hasbro",
+            "year_released": 1935,
+            "number_of_players": 4,
+            "estimated_time_to_play": 120,
+            "age_recommendation": 7,
+            "gamer": 1
+        }
+    },
+    {
+        "model": "raterprojectapi.game",
+        "pk": 3,
+        "fields": {
+            "title": "Magic the Gathering",
+            "description": "Money sink",
+            "designer": "Wizards of the Coast",
+            "year_released": 1993,
+            "number_of_players": 2,
+            "estimated_time_to_play": 50,
+            "age_recommendation": 13,
+            "gamer": 1
+        }
+    }
+]
