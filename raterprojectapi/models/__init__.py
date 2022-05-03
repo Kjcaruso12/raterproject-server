@@ -1,6 +1,8 @@
-from .Category import Category
-from .Game import Game
-from .Gamer import Gamer
-from .Photo import Photo
-from .Rating import Rating
-from .Review import Review
+from raterprojectapi.models.Category import Category
+from raterprojectapi.models.Game import Game
+from raterprojectapi.models.Gamer import Gamer
+from raterprojectapi.models.Photo import Photo
+from raterprojectapi.models.Rating import Rating
+from raterprojectapi.models.Review import Review
+
+

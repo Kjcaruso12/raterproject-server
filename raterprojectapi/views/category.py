@@ -4,10 +4,11 @@ from django.core.exceptions import ValidationError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
+from raterprojectapi.models.Category import Category
 from raterprojectapi.models.Game import Game
-from raterprojectapi.models.Gamer import Gamer
 
-class GameView(ViewSet):
+
+class CategoryView(ViewSet):
     """Level up game types view"""
 
     def retrieve(self, request, pk):
@@ -16,8 +17,8 @@ class GameView(ViewSet):
         Returns:
             Response -- JSON serialized game type
         """
-        game = Game.objects.get(pk=pk)
-        serializer = GameSerializer(game)
+        category = Category.objects.get(pk=pk)
+        serializer = CategorySerializer(category)
         return Response(serializer.data)
 
 
@@ -28,10 +29,10 @@ class GameView(ViewSet):
             Response -- JSON serialized list of game types
         """
         try:
-            games = Game.objects.all()
-            serializer = GameSerializer(games, many=True)
+            category = Category.objects.all()
+            serializer = CategorySerializer(category, many=True)
             return Response(serializer.data)
-        except Game.DoesNotExist as ex:
+        except Category.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     def create(self, request):
@@ -40,20 +41,9 @@ class GameView(ViewSet):
         Returns
             Response -- JSON serialized game instance
         """
-        gamer = Gamer.objects.get(user=request.auth.user)
-        game = Game.objects.create(
-            title=request.data['title'],
-            description=request.data['description'],
-            designer=request.data['designer'],
-            year_released=request.data['year_released'],
-            number_of_players=request.data['number_of_players'],
-            estimated_time_to_play=request.data['estimated_time_to_play'],
-            age_recommendation=request.data['age_recommendation']
-        )
-        game.categories.add(*request.data['categoryId'])
-        serializer = CreateGameSerializer(data=request.data)
+        serializer = CreateCategorySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(gamer=gamer)
+        serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -63,30 +53,30 @@ class GameView(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
-        game = Game.objects.get(pk=pk)
-        serializer = CreateGameSerializer(game, data=request.data)
+        category = Category.objects.get(pk=pk)
+        serializer = CreateCategorySerializer(category, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk):
-        game = Game.objects.get(pk=pk)
-        game.delete()
+        category = Category.objects.get(pk=pk)
+        category.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
 
 
-class GameSerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     """JSON serializer for game types
     """
     # gamer = GamerSerializer(many=False)
     # gametype = GameTypeSerializer(many=False)
     class Meta:
-        model = Game
-        fields = ('id', 'title', 'description', 'designer', 'year_released', 'number_of_players', 'estimated_time_to_play', 'age_recommendation', 'gamer')
+        model = Category
+        fields = ('id', 'label')
         depth = 1
 
-class CreateGameSerializer(serializers.ModelSerializer):
+class CreateCategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Game
-        fields = ['id', 'title', 'description', 'designer', 'year_released', 'number_of_players', 'estimated_time_to_play', 'age_recommendation', 'gamer']
+        model = Category
+        fields = ['id', 'label']
