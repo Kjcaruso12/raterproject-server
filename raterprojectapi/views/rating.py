@@ -6,8 +6,9 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 from raterprojectapi.models.Game import Game
 from raterprojectapi.models.Gamer import Gamer
+from raterprojectapi.models.Rating import Rating
 
-class GameView(ViewSet):
+class RatingView(ViewSet):
     """Level up game types view"""
 
     def retrieve(self, request, pk):
@@ -16,8 +17,8 @@ class GameView(ViewSet):
         Returns:
             Response -- JSON serialized game type
         """
-        game = Game.objects.get(pk=pk)
-        serializer = GameSerializer(game)
+        rating = Rating.objects.get(pk=pk)
+        serializer = RatingSerializer(rating)
         return Response(serializer.data)
 
 
@@ -28,10 +29,13 @@ class GameView(ViewSet):
             Response -- JSON serialized list of game types
         """
         try:
-            games = Game.objects.all()
-            serializer = GameSerializer(games, many=True)
+            ratings = Rating.objects.all()
+            game = request.query_params.get('game', None)
+            if game is not None:
+                ratings = ratings.filter(game_id=game)
+            serializer = RatingSerializer(ratings, many=True)
             return Response(serializer.data)
-        except Game.DoesNotExist as ex:
+        except Rating.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     def create(self, request):
@@ -41,17 +45,7 @@ class GameView(ViewSet):
             Response -- JSON serialized game instance
         """
         gamer = Gamer.objects.get(user=request.auth.user)
-        game = Game.objects.create(
-            title=request.data['title'],
-            description=request.data['description'],
-            designer=request.data['designer'],
-            year_released=request.data['year_released'],
-            number_of_players=request.data['number_of_players'],
-            estimated_time_to_play=request.data['estimated_time_to_play'],
-            age_recommendation=request.data['age_recommendation']
-        )
-        game.categories.add(*request.data['categoryId'])
-        serializer = CreateGameSerializer(data=request.data)
+        serializer = CreateRatingSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(gamer=gamer)
 
@@ -63,30 +57,30 @@ class GameView(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
-        game = Game.objects.get(pk=pk)
-        serializer = CreateGameSerializer(game, data=request.data)
+        rating = Rating.objects.get(pk=pk)
+        serializer = CreateRatingSerializer(rating, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk):
-        game = Game.objects.get(pk=pk)
-        game.delete()
+        rating = Rating.objects.get(pk=pk)
+        rating.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
 
 
-class GameSerializer(serializers.ModelSerializer):
+class RatingSerializer(serializers.ModelSerializer):
     """JSON serializer for game types
     """
     # gamer = GamerSerializer(many=False)
     # gametype = GameTypeSerializer(many=False)
     class Meta:
-        model = Game
-        fields = ('id', 'title', 'description', 'designer', 'year_released', 'number_of_players', 'estimated_time_to_play', 'age_recommendation', 'gamer', 'average_rating')
-        depth = 3
+        model = Rating
+        fields = ('id', 'value', 'game', 'gamer')
+        depth = 1
 
-class CreateGameSerializer(serializers.ModelSerializer):
+class CreateRatingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Game
-        fields = ['id', 'title', 'description', 'designer', 'year_released', 'number_of_players', 'estimated_time_to_play', 'age_recommendation', 'gamer']
+        model = Rating
+        fields = ['id', 'value', 'game']
